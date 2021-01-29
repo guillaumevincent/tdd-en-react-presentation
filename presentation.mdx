@@ -1,0 +1,577 @@
+import { CodeSurfer, Step } from "code-surfer";
+import { github } from "@code-surfer/themes";
+
+import lego from "./images/lego.jpg";
+import form from "./images/form.png";
+import nav from "./images/nav.png";
+import tdd from "./images/tdd.png";
+import howtotest from "./images/howtotest.png";
+
+export const theme = github;
+
+# TDD EN REACT
+
+---
+
+## Développement piloté par les tests
+
+<img
+  src={tdd}
+  style={{
+    width: "100%",
+    maxWidth: "1080px",
+  }}
+/>
+
+---
+
+## Développement piloté par les tests
+
+<CodeSurfer>
+
+```js subtitle="On écrit le test"
+import { ajouter } from "./mth.js";
+
+test("methode ajouter", () => {
+  expect(ajouter(1, 1)).toBe(2);
+});
+```
+
+```js subtitle="On écrit le morceau de code qui fait passer ce test au vert"
+import { ajouter } from "./mth.js";
+
+test("methode ajouter", () => {
+  expect(ajouter(1, 1)).toBe(2);
+});
+
+function ajouter(valeur1, valeur2) {
+  return valeur1 + valeur2;
+}
+```
+
+```diff subtitle="On nettoie et simplifie le code si besoin"
+
+```
+
+</CodeSurfer>
+
+---
+
+## Comment testeriez vous ?
+
+<img
+  src={form}
+  style={{
+    width: "100%",
+    maxWidth: "580px",
+  }}
+/>
+
+---
+
+## Comme vos utilisateurs
+## utilisent votre application
+
+<img
+  src={howtotest}
+  style={{
+    width: "100%",
+    maxWidth: "580px",
+  }}
+/>
+
+---
+
+<CodeSurfer>
+
+```jsx 6,12
+import React from "react";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import Formulaire from "./Formulaire";
+
+test("Quand je clique sur le label Email, le champ texte en dessous est selectionné", () => {
+  render(<Formulaire />);
+  const labelEmail = screen.getByLabelText(/Email/i);
+  userEvent.click(labelEmail);
+  const email = screen.getByRole("textbox", { name: /email/i });
+  expect(email).toHaveFocus();
+});
+```
+
+```diff 2,4,7
+
+```
+
+```diff 2,3,8,9
+
+```
+
+```diff 2,10,11
+
+```
+
+```jsx
+import React from "react";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import Formulaire from "./Formulaire";
+
+function Formulaire() {
+  return (
+    <>
+      <label htmlFor="email">Email</label>
+      <input id="email" type="text" />
+    </>
+  );
+}
+
+test("Quand je clique sur le label Email, le champ texte en dessous est selectionné", () => {
+  render(<Formulaire />);
+  const labelEmail = screen.getByLabelText(/Email/i);
+  userEvent.click(labelEmail);
+  const email = screen.getByRole("textbox", { name: /email/i });
+  expect(email).toHaveFocus();
+});
+```
+
+```jsx 15,22
+import React from "react";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import Formulaire from "./Formulaire";
+
+function Formulaire() {
+  return (
+    <>
+      <label htmlFor="email">Email</label>
+      <input id="email" type="text" />
+    </>
+  );
+}
+
+test("Les caractères dans le champ mot de passe sont masqués", () => {
+  render(<Formulaire />);
+  const champMotDePasse = screen.getByLabelText(/Mot de passe/i);
+  expect(champMotDePasse).toHaveValue("");
+  userEvent.type(champMotDePasse, "a");
+  expect(champMotDePasse).toHaveValue("a");
+  expect(champMotDePasse.type).toBe("password");
+});
+
+test("Quand je clique sur le label Email, le champ texte en dessous est selectionné", () => {
+  render(<Formulaire />);
+  const labelEmail = screen.getByLabelText(/Email/i);
+  userEvent.click(labelEmail);
+  const email = screen.getByRole("textbox", { name: /email/i });
+  expect(email).toHaveFocus();
+});
+```
+
+```diff 2,16
+
+```
+
+```diff 2,17,18,19
+
+```
+
+```diff 2,20,21
+
+```
+
+```jsx
+import React from "react";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import Formulaire from "./Formulaire";
+
+function Formulaire() {
+  return (
+    <>
+      <label htmlFor="email">Email</label>
+      <input id="email" type="text" />
+      <label htmlFor="password">Mot de passe</label>
+      <input id="password" type="password" />
+    </>
+  );
+}
+
+test("Les caractères dans le champ mot de passe sont masqués", () => {
+  render(<Formulaire />);
+  const champMotDePasse = screen.getByLabelText(/Mot de passe/i);
+  expect(champMotDePasse).toHaveValue("");
+  userEvent.type(champMotDePasse, "a");
+  expect(champMotDePasse).toHaveValue("a");
+  expect(champMotDePasse.type).toBe("password");
+});
+
+test("Quand je clique sur le label Email, le champ texte en dessous est selectionné", () => {
+  render(<Formulaire />);
+  const labelEmail = screen.getByLabelText(/Email/i);
+  userEvent.click(labelEmail);
+  const email = screen.getByRole("textbox", { name: /email/i });
+  expect(email).toHaveFocus();
+});
+```
+
+</CodeSurfer>
+
+---
+
+<CodeSurfer>
+
+```jsx
+import React from "react";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import Formulaire from "./Formulaire";
+
+function Formulaire() {
+  return (
+    <>
+      <label htmlFor="email">Email</label>
+      <input id="email" type="text" />
+      <label htmlFor="password">Mot de passe</label>
+      <input id="password" type="password" />
+    </>
+  );
+}
+
+test("Les caractères dans le champ mot de passe sont masqués", () => {
+  render(<Formulaire />);
+  const champMotDePasse = screen.getByLabelText(/Mot de passe/i);
+  expect(champMotDePasse).toHaveValue("");
+  userEvent.type(champMotDePasse, "a");
+  expect(champMotDePasse).toHaveValue("a");
+  expect(champMotDePasse.type).toBe("password");
+});
+
+test("Quand je clique sur le label Email, le champ texte en dessous est selectionné", () => {
+  render(<Formulaire />);
+  const labelEmail = screen.getByLabelText(/Email/i);
+  userEvent.click(labelEmail);
+  const email = screen.getByRole("textbox", { name: /email/i });
+  expect(email).toHaveFocus();
+});
+```
+
+</CodeSurfer>
+
+---
+
+<CodeSurfer>
+
+```jsx 1,17 title="Test"
+test("Quand on clique sur le bouton Se Connecter ?", () => {
+  const mockLorsDeLaSoumission = jest.fn();
+  render(<Formulaire lorsDeLaSoumission={mockLorsDeLaSoumission} />);
+  const labelEmail = screen.getByLabelText(/Email/i);
+  userEvent.type(labelEmail, "test@example.org");
+  const champMotDePasse = screen.getByLabelText(/Mot de passe/i);
+  userEvent.type(champMotDePasse, "password");
+  const boutonSeConnecter = screen.getByRole("button", {
+    name: /Se Connecter/i,
+  });
+  fireEvent.click(boutonSeConnecter);
+  expect(mockLorsDeLaSoumission.mock.calls.length).toBe(1);
+  expect(mockLorsDeLaSoumission.mock.calls[0][0]).toEqual({
+    email: "test@example.org",
+    password: "password",
+  });
+});
+```
+
+```diff 2,3
+
+```
+
+```diff 4:10
+
+```
+
+```diff 11
+
+```
+
+```diff 12:16
+
+```
+
+```jsx title="Code de production"
+import React, { useState } from "react";
+
+function Formulaire({ lorsDeLaSoumission }) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  return (
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        lorsDeLaSoumission({ email, password });
+      }}
+    >
+      <label htmlFor="email">Email</label>
+      <input
+        id="email"
+        type="text"
+        name="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <label htmlFor="password">Mot de passe</label>
+      <input
+        id="password"
+        type="password"
+        name="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      <button type="submit">Se Connecter</button>
+    </form>
+  );
+}
+```
+
+</CodeSurfer>
+
+---
+
+## Et la navigation ?
+
+<img
+  src={nav}
+  style={{
+    width: "100%",
+    maxWidth: "1330px",
+  }}
+/>
+
+---
+
+<CodeSurfer>
+
+```jsx 4,7:13,16,17
+import React from "react";
+import { fireEvent, render, screen } from "@testing-library/react";
+import App from "./App";
+import { createMemoryHistory } from "history";
+import { Router } from "react-router-dom";
+
+const InitApp = ({ history = createMemoryHistory() }) => {
+  return (
+    <Router history={history}>
+      <App />
+    </Router>
+  );
+};
+
+test("navigation pages non authentifié", async () => {
+  const history = createMemoryHistory();
+  render(<InitApp history={history} />);
+  expect(history.location.pathname).toBe("/");
+  fireEvent.click(screen.queryByText(/Se connecter/i));
+  expect(history.location.pathname).toBe("/login");
+  fireEvent.click(screen.queryByText(/Créer un compte/i));
+  expect(history.location.pathname).toBe("/register");
+  fireEvent.click(screen.queryByText(/Accueil/i));
+  expect(history.location.pathname).toBe("/");
+});
+```
+
+```diff 18
+
+```
+
+```diff 19
+
+```
+
+```diff 20
+
+```
+
+```diff 1:25
+
+```
+
+</CodeSurfer>
+
+---
+
+<CodeSurfer>
+
+```jsx
+import React from "react";
+import { Link, Route } from "react-router-dom";
+import HomePage from "./HomePage";
+import LoginPage from "./LoginPage";
+import RegisterPage from "./RegisterPage";
+
+function App() {
+  return (
+    <div>
+      <nav>
+        <ul>
+          <li>
+            <Link to="/">Accueil</Link>
+          </li>
+          <li>
+            <Link to="/login">Se connecter</Link>
+          </li>
+          <li>
+            <Link to="/register">Créer un compte</Link>
+          </li>
+        </ul>
+      </nav>
+      <Route path="/" exact component={HomePage} />
+      <Route path="/login" component={LoginPage} />
+      <Route path="/register" component={RegisterPage} />
+    </div>
+  );
+}
+
+export default App;
+```
+
+</CodeSurfer>
+
+---
+
+## Redux Reducer
+
+---
+
+<CodeSurfer>
+
+```js
+import reducer from "./alertsReducer";
+import * as types from "./alertsActionsTypes";
+
+test("AFFICHER_UNE_ALERTE", () => {
+  expect(
+    reducer(undefined, {
+      type: types.AFFICHER_UNE_ALERTE,
+      alerte: {
+        id: "a1",
+        type: "success",
+        title: "",
+      },
+    })
+  ).toEqual({
+    a1: {
+      id: "a1",
+      type: "success",
+      title: "",
+    },
+  });
+});
+```
+
+</CodeSurfer>
+
+---
+
+<CodeSurfer>
+
+```js
+import * as types from "./alertsActionsTypes";
+
+const initialState = {};
+
+export default function (state = initialState, action) {
+  switch (action.type) {
+    case types.AFFICHER_UNE_ALERTE:
+      return {
+        ...state,
+        [action.alert.id]: action.alert,
+      };
+    default:
+      return state;
+  }
+}
+```
+
+</CodeSurfer>
+
+---
+
+## Action Redux
+
+---
+
+<CodeSurfer>
+
+```js
+import { afficherUneAlerte } from "./alertsActions";
+import * as types from "./alertsActionsTypes";
+
+test("afficherUneAlerte", () => {
+  expect(
+    afficherUneAlerte({
+      id: "a1",
+      type: "success",
+      title: "",
+    })
+  ).toEqual({
+    type: types.AFFICHER_UNE_ALERTE,
+    alerte: {
+      id: "a1",
+      type: "success",
+      title: "",
+    },
+  });
+});
+```
+
+</CodeSurfer>
+
+---
+
+<CodeSurfer>
+
+```js
+import * as types from "./alertsActionsTypes";
+
+export function afficherUneAlerte(alerte) {
+  return {
+    type: types.AFFICHER_UNE_ALERTE,
+    alerte,
+  };
+}
+```
+
+</CodeSurfer>
+
+---
+
+## Demo
+
+---
+
+## Conclusion
+
+- Commencer simplement sur des composants purs
+- Ajouter des tests de non regression
+- Injecter ou mocker les dépendances aux services qui ont des effets de bord
+- Ecrivez vos tests en vous rapprochant de comment vos utilisateurs utilisent votre application
+
+---
+
+## Liens
+
+- https://jestjs.io/
+- https://testing-library.com/
+
+
+
+---
+
+## Merci
+
+Et en particulier à :
+
+- Amélie
+- Cédric
+- Epitech
+ 
